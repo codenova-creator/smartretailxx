@@ -1,0 +1,573 @@
+{
+	"info": {
+		"_postman_id": "a8f7c6e1-2b3a-4c5d-6e7f-8a9b0c1d2e3f",
+		"name": "SmartRetailX Microservices Collection",
+		"description": "Postman Collection for SmartRetailX Microservices including User, Product, Order, Payment, and Notification services.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User Service",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Alice Smith\",\n  \"email\": \"alice@example.com\",\n  \"role\": \"Customer\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/v1/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/v1/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product Service",
+			"item": [
+				{
+					"name": "Get Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5002/api/v1/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5002",
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5002/api/v1/products/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5002",
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Mechanical Keyboard\",\n  \"description\": \"RGB Mechanical Keyboard\",\n  \"price\": 89.99,\n  \"category\": \"Electronics\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5002/api/v1/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5002",
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Wireless Gaming Mouse\",\n  \"description\": \"High DPI Ergonomic wireless mouse\",\n  \"price\": 49.99,\n  \"category\": \"Gaming Accessories\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5002/api/v1/products/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5002",
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order Service",
+			"item": [
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 2,\n  \"status\": \"Pending\",\n  \"items\": [\n    {\n      \"productId\": 3,\n      \"productName\": \"Mechanical Keyboard\",\n      \"quantity\": 1,\n      \"unitPrice\": 89.99\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5003/api/v1/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5003",
+							"path": [
+								"api",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5003/api/v1/orders/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5003",
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5003/api/v1/users/2/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5003",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"2",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment Service",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5005/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5005",
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5005/api/v1/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5005",
+							"path": [
+								"api",
+								"v1",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Payment (Success)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": 1,\n  \"userId\": 2,\n  \"amount\": 999.99,\n  \"currency\": \"USD\",\n  \"paymentMethod\": \"Card\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5005/api/v1/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5005",
+							"path": [
+								"api",
+								"v1",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Payment (Failure)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": 2,\n  \"userId\": 2,\n  \"amount\": 99.99,\n  \"currency\": \"USD\",\n  \"paymentMethod\": \"Card\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5005/api/v1/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5005",
+							"path": [
+								"api",
+								"v1",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payment by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5005/api/v1/payments/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5005",
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notification Service",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5004/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5004",
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Notifications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5004/api/v1/notifications",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5004",
+							"path": [
+								"api",
+								"v1",
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Mock Notification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 2,\n  \"orderId\": 42,\n  \"type\": \"ORDER_CREATED\",\n  \"message\": \"Order #42 created successfully.\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5004/api/v1/notifications",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5004",
+							"path": [
+								"api",
+								"v1",
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Simulate OrderCreated Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"evt_order_123\",\n  \"detail-type\": \"OrderCreated\",\n  \"source\": \"com.smartretailx.order-service\",\n  \"time\": \"2026-08-15T14:42:00Z\",\n  \"detail\": {\n    \"version\": \"1.0\",\n    \"orderId\": 42,\n    \"userId\": 2,\n    \"totalAmount\": 999.99,\n    \"currency\": \"USD\",\n    \"status\": \"Pending\",\n    \"orderDate\": \"2026-08-15T14:42:00Z\",\n    \"items\": [\n      {\n        \"productId\": \"prod-001\",\n        \"productName\": \"Laptop\",\n        \"quantity\": 1,\n        \"unitPrice\": 999.99\n      }\n    ]\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5004/api/v1/notifications/simulate-sqs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5004",
+							"path": [
+								"api",
+								"v1",
+								"notifications",
+								"simulate-sqs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Simulate PaymentCompleted Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"evt_payment_456\",\n  \"detail-type\": \"PaymentCompleted\",\n  \"source\": \"com.smartretailx.payment-service\",\n  \"time\": \"2026-08-15T14:43:00Z\",\n  \"detail\": {\n    \"version\": \"1.0\",\n    \"paymentId\": 1,\n    \"orderId\": 42,\n    \"userId\": 2,\n    \"amount\": 999.99,\n    \"currency\": \"USD\",\n    \"paymentMethod\": \"Card\",\n    \"transactionRef\": \"txn_abcdef123456\",\n    \"paidAt\": \"2026-08-15T14:43:00Z\"\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5004/api/v1/notifications/simulate-sqs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5004",
+							"path": [
+								"api",
+								"v1",
+								"notifications",
+								"simulate-sqs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Simulate PaymentFailed Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"evt_payment_789\",\n  \"detail-type\": \"PaymentFailed\",\n  \"source\": \"com.smartretailx.payment-service\",\n  \"time\": \"2026-08-15T14:44:00Z\",\n  \"detail\": {\n    \"version\": \"1.0\",\n    \"paymentId\": 2,\n    \"orderId\": 43,\n    \"userId\": 2,\n    \"amount\": 99.99,\n    \"currency\": \"USD\",\n    \"failureReason\": \"insufficient_funds\",\n    \"failedAt\": \"2026-08-15T14:44:00Z\"\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5004/api/v1/notifications/simulate-sqs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5004",
+							"path": [
+								"api",
+								"v1",
+								"notifications",
+								"simulate-sqs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear Idempotency Cache",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5004/api/v1/notifications/clear-cache",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5004",
+							"path": [
+								"api",
+								"v1",
+								"notifications",
+								"clear-cache"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

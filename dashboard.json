@@ -1,0 +1,188 @@
+{
+  "widgets": [
+    {
+      "type": "alarm",
+      "x": 0,
+      "y": 0,
+      "width": 24,
+      "height": 3,
+      "properties": {
+        "title": "🔔 CloudWatch Alarms Status",
+        "alarms": [
+          "arn:aws:cloudwatch:ap-south-1:530751148786:alarm:SmartRetailX-HighCPUAlarm",
+          "arn:aws:cloudwatch:ap-south-1:530751148786:alarm:SmartRetailX-ALB-5XX-Alarm"
+        ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 3,
+      "width": 8,
+      "height": 6,
+      "properties": {
+        "title": "ALB - Request Count",
+        "metrics": [
+          [
+            "AWS/ApplicationELB",
+            "RequestCount",
+            "LoadBalancer",
+            "SmartRetailX-ALB"
+          ]
+        ],
+        "view": "timeSeries",
+        "stat": "Sum",
+        "period": 60,
+        "region": "ap-south-1"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 8,
+      "y": 3,
+      "width": 8,
+      "height": 6,
+      "properties": {
+        "title": "ALB - HTTP 5xx Errors",
+        "metrics": [
+          [
+            "AWS/ApplicationELB",
+            "HTTPCode_ELB_5XX_Count",
+            "LoadBalancer",
+            "SmartRetailX-ALB"
+          ]
+        ],
+        "view": "timeSeries",
+        "stat": "Sum",
+        "period": 60,
+        "region": "ap-south-1"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 16,
+      "y": 3,
+      "width": 8,
+      "height": 6,
+      "properties": {
+        "title": "ALB - Target Response Time",
+        "metrics": [
+          [
+            "AWS/ApplicationELB",
+            "TargetResponseTime",
+            "LoadBalancer",
+            "SmartRetailX-ALB"
+          ]
+        ],
+        "view": "timeSeries",
+        "stat": "Average",
+        "period": 60,
+        "region": "ap-south-1"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 9,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "ALB - Healthy vs Unhealthy Hosts",
+        "metrics": [
+          [
+            "AWS/ApplicationELB",
+            "HealthyHostCount",
+            "TargetGroup",
+            "SmartRetailX-User-TG",
+            "LoadBalancer",
+            "SmartRetailX-ALB"
+          ],
+          [
+            "AWS/ApplicationELB",
+            "UnHealthyHostCount",
+            "TargetGroup",
+            "SmartRetailX-User-TG",
+            "LoadBalancer",
+            "SmartRetailX-ALB"
+          ]
+        ],
+        "view": "timeSeries",
+        "stat": "Average",
+        "period": 60,
+        "region": "ap-south-1"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 9,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "ECS - CPU Utilization",
+        "metrics": [
+          [
+            "AWS/ECS",
+            "CPUUtilization",
+            "ClusterName",
+            "SmartRetailX-Cluster",
+            "ServiceName",
+            "SmartRetailX-UserService"
+          ]
+        ],
+        "view": "timeSeries",
+        "stat": "Average",
+        "period": 60,
+        "region": "ap-south-1"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 15,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "ECS - Memory Utilization",
+        "metrics": [
+          [
+            "AWS/ECS",
+            "MemoryUtilization",
+            "ClusterName",
+            "SmartRetailX-Cluster",
+            "ServiceName",
+            "SmartRetailX-UserService"
+          ]
+        ],
+        "view": "timeSeries",
+        "stat": "Average",
+        "period": 60,
+        "region": "ap-south-1"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 15,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "ECS - Running Task Count",
+        "metrics": [
+          [
+            "ECS/ContainerInsights",
+            "RunningTaskCount",
+            "ClusterName",
+            "SmartRetailX-Cluster",
+            "ServiceName",
+            "SmartRetailX-UserService"
+          ]
+        ],
+        "view": "timeSeries",
+        "stat": "Average",
+        "period": 60,
+        "region": "ap-south-1"
+      }
+    }
+  ]
+}

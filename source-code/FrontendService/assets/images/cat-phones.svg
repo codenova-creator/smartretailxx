@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#F97316" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#0A0915" stop-opacity="1" />
+    </radialGradient>
+    <linearGradient id="cyberLine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F97316" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="600" height="600" fill="#0E0D1F" rx="20"/>
+  <rect width="600" height="600" fill="url(#bgGlow)" rx="20"/>
+  
+  <!-- Cyber Grid Pattern -->
+  <path d="M0 100 H600 M0 200 H600 M0 300 H600 M0 400 H600 M0 500 H600" stroke="#1F1D3D" stroke-width="1" stroke-dasharray="4 8"/>
+  <path d="M100 0 V600 M200 0 V600 M300 0 V600 M400 0 V600 M500 0 V600" stroke="#1F1D3D" stroke-width="1" stroke-dasharray="4 8"/>
+
+  <!-- Tech Hexagon / HUD Frame -->
+  <polygon points="300,90 470,190 470,390 300,490 130,390 130,190" stroke="url(#cyberLine)" stroke-width="2" fill="#14132B" fill-opacity="0.8" filter="url(#neonGlow)"/>
+  <polygon points="300,110 450,200 450,380 300,470 150,380 150,200" stroke="#7C3AED" stroke-width="1" stroke-dasharray="8 6" fill="none" opacity="0.6"/>
+
+  <!-- Corner Tech Accents -->
+  <path d="M 30 50 L 30 30 L 50 30" stroke="#F97316" stroke-width="3" fill="none"/>
+  <path d="M 570 50 L 570 30 L 550 30" stroke="#F97316" stroke-width="3" fill="none"/>
+  <path d="M 30 550 L 30 570 L 50 570" stroke="#F97316" stroke-width="3" fill="none"/>
+  <path d="M 570 550 L 570 570 L 550 570" stroke="#F97316" stroke-width="3" fill="none"/>
+
+  <!-- Central Visual Symbol / Emoji -->
+  <text x="300" y="290" font-size="110" text-anchor="middle" dominant-baseline="middle">📱</text>
+
+  <!-- Cyber Badge Tag -->
+  <rect x="200" y="340" width="200" height="32" rx="4" fill="#0A0915" stroke="url(#cyberLine)" stroke-width="1.5"/>
+  <text x="300" y="361" font-family="Orbitron, Rajdhani, monospace" font-size="14" font-weight="900" fill="#00FF9D" letter-spacing="3" text-anchor="middle">CYBER COMPANIONS</text>
+
+  <!-- Title Text -->
+  <text x="300" y="435" font-family="Orbitron, Rajdhani, sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">PHONES &amp; WEARABLES</text>
+  <text x="300" y="460" font-family="Rajdhani, sans-serif" font-size="14" fill="#94A3B8" text-anchor="middle" letter-spacing="2">SMARTIFY CERTIFIED GEAR // 2026 EDITION</text>
+
+  <!-- Cyber HUD Elements -->
+  <circle cx="300" cy="50" r="4" fill="#F97316" filter="url(#neonGlow)"/>
+  <text x="300" y="550" font-family="monospace" font-size="11" fill="#7C3AED" text-anchor="middle" opacity="0.8">LOADOUT SYNC // SYSTEM READY // ID_SMT_9860</text>
+</svg>

@@ -348,97 +348,142 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const [showAlbBar, setShowAlbBar] = useState(false);
   const routePath = route === 'home' ? '' : route === 'product-details' ? `products/${selectedProductId || 1}` : route === 'confirmation' ? `orders/confirmation/${selectedOrderId || 1001}` : route;
   const currentAlbUrl = `http://smartretailx-alb-123532839.ap-south-1.elb.amazonaws.com/${routePath}`;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       
-      {/* ---------------- AWS ALB LIVE URL & STATUS BAR ---------------- */}
-      <div style={{
-        background: 'linear-gradient(90deg, #090e1a 0%, #0d1527 50%, #090e1a 100%)',
-        borderBottom: '1px solid rgba(99, 102, 241, 0.35)',
-        padding: '0.4rem 1rem',
-        fontSize: '0.8rem',
-        position: 'relative',
-        zIndex: 105,
-        color: '#cbd5e1'
-      }}>
-        <div className="container" style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '0.5rem',
-          padding: 0
+      {/* ---------------- AWS ALB BAR (COLLAPSED ARROW / EXPANDED RIBBON) ---------------- */}
+      {!showAlbBar ? (
+        <button
+          onClick={() => setShowAlbBar(true)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            right: '20px',
+            zIndex: 9999,
+            background: 'rgba(15, 23, 42, 0.88)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(99, 102, 241, 0.35)',
+            borderTop: 'none',
+            borderRadius: '0 0 8px 8px',
+            padding: '3px 12px',
+            color: '#cbd5e1',
+            cursor: 'pointer',
+            fontSize: '0.72rem',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+            transition: 'all 0.2s ease'
+          }}
+          title="Click to view AWS Application Load Balancer Gateway Bar"
+        >
+          <span style={{ fontSize: '0.7rem', color: '#fbbf24' }}>☁</span>
+          <span style={{ color: '#94a3b8' }}>AWS ALB</span>
+          <span style={{ fontSize: '0.65rem', color: '#38bdf8' }}>▼</span>
+        </button>
+      ) : (
+        <div style={{
+          background: 'linear-gradient(90deg, #090e1a 0%, #0d1527 50%, #090e1a 100%)',
+          borderBottom: '1px solid rgba(99, 102, 241, 0.35)',
+          padding: '0.4rem 1rem',
+          fontSize: '0.8rem',
+          position: 'relative',
+          zIndex: 105,
+          color: '#cbd5e1',
+          animation: 'fadeIn 0.25s ease'
         }}>
-          {/* Left: AWS ALB Badge */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <div className="container" style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '0.5rem',
+            padding: 0
+          }}>
+            {/* Left: AWS ALB Badge */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                background: 'rgba(255, 153, 0, 0.15)',
+                border: '1px solid rgba(255, 153, 0, 0.4)',
+                color: '#fbbf24',
+                padding: '0.15rem 0.5rem',
+                borderRadius: '4px',
+                fontWeight: 700,
+                fontSize: '0.72rem',
+                letterSpacing: '0.04em'
+              }}>
+                <Icon.Shield />
+                <span>AWS ALB</span>
+              </div>
+              <span style={{ color: '#64748b', fontSize: '0.75rem' }}>Region: <strong>ap-south-1</strong></span>
+              <span style={{ color: '#64748b', fontSize: '0.75rem' }}>•</span>
+              <span style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+                color: '#34d399',
+                fontSize: '0.72rem',
+                fontWeight: 600
+              }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }}></span>
+                ECS Target Group: 6/6 Healthy (14ms)
+              </span>
+            </div>
+
+            {/* Center: Live AWS ALB Address Bar */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.35rem',
-              background: 'rgba(255, 153, 0, 0.15)',
-              border: '1px solid rgba(255, 153, 0, 0.4)',
-              color: '#fbbf24',
-              padding: '0.15rem 0.5rem',
-              borderRadius: '4px',
-              fontWeight: 700,
-              fontSize: '0.72rem',
-              letterSpacing: '0.04em'
+              gap: '0.5rem',
+              background: '#060911',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '6px',
+              padding: '0.25rem 0.75rem',
+              maxWidth: '580px',
+              flexGrow: 1,
+              fontFamily: 'monospace',
+              fontSize: '0.78rem'
             }}>
-              <Icon.Shield />
-              <span>AWS ALB</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span style={{ color: '#94a3b8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                http://<strong style={{ color: '#f8fafc' }}>smartretailx-alb-123532839.ap-south-1.elb.amazonaws.com</strong><span style={{ color: '#38bdf8' }}>/{routePath}</span>
+              </span>
             </div>
-            <span style={{ color: '#64748b', fontSize: '0.75rem' }}>Region: <strong>ap-south-1</strong></span>
-            <span style={{ color: '#64748b', fontSize: '0.75rem' }}>•</span>
-            <span style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.3rem',
-              color: '#34d399',
-              fontSize: '0.72rem',
-              fontWeight: 600
-            }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }}></span>
-              ECS Target Group: 6/6 Healthy (14ms)
-            </span>
-          </div>
 
-          {/* Center: Live AWS ALB Address Bar */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            background: '#060911',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            borderRadius: '6px',
-            padding: '0.25rem 0.75rem',
-            maxWidth: '580px',
-            flexGrow: 1,
-            fontFamily: 'monospace',
-            fontSize: '0.78rem'
-          }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            <span style={{ color: '#94a3b8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              http://<strong style={{ color: '#f8fafc' }}>smartretailx-alb-123532839.ap-south-1.elb.amazonaws.com</strong><span style={{ color: '#38bdf8' }}>/{routePath}</span>
-            </span>
-          </div>
+            {/* Right: Actions */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(currentAlbUrl);
+                  showToast('Copied AWS ALB link to clipboard!');
+                }}
+                className="btn btn-secondary btn-sm"
+                style={{ padding: '0.2rem 0.5rem', fontSize: '0.72rem', gap: '0.3rem', background: 'rgba(255,255,255,0.05)' }}
+                title="Copy AWS ALB Gateway URL"
+              >
+                📋 Copy ALB URL
+              </button>
 
-          {/* Right: Copy ALB URL */}
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(currentAlbUrl);
-              showToast('Copied AWS ALB link to clipboard!');
-            }}
-            className="btn btn-secondary btn-sm"
-            style={{ padding: '0.2rem 0.5rem', fontSize: '0.72rem', gap: '0.3rem', background: 'rgba(255,255,255,0.05)' }}
-            title="Copy AWS ALB Gateway URL"
-          >
-            📋 Copy ALB URL
-          </button>
+              <button
+                onClick={() => setShowAlbBar(false)}
+                className="btn btn-secondary btn-sm"
+                style={{ padding: '0.2rem 0.5rem', fontSize: '0.72rem', background: 'rgba(255,255,255,0.05)', color: '#94a3b8' }}
+                title="Hide AWS ALB Bar"
+              >
+                ▲ Hide
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ---------------- NAVIGATION HEADER ---------------- */}
       <header className="navbar">

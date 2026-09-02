@@ -8,7 +8,7 @@ export const AwsAlbBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
-  const [minimized, setMinimized] = useState(false);
+  const [minimized, setMinimized] = useState(true);
 
   const fullAlbUrl = `http://${ALB_BASE_DOMAIN}${location.pathname}${location.search}`;
 
@@ -21,31 +21,35 @@ export const AwsAlbBar = () => {
 
   if (minimized) {
     return (
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        right: '20px',
-        zIndex: 1100,
-        background: '#090d16',
-        border: '1px solid rgba(99, 102, 241, 0.4)',
-        borderTop: 'none',
-        borderRadius: '0 0 10px 10px',
-        padding: '0.3rem 0.8rem',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-        fontSize: '0.75rem',
-        cursor: 'pointer',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-        color: '#a5b4fc'
-      }}
-      onClick={() => setMinimized(false)}
-      title="Expand AWS ALB Address Ribbon"
+      <button
+        style={{
+          position: 'fixed',
+          top: 0,
+          right: '20px',
+          zIndex: 9999,
+          background: 'rgba(15, 23, 42, 0.88)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(99, 102, 241, 0.35)',
+          borderTop: 'none',
+          borderRadius: '0 0 8px 8px',
+          padding: '3px 12px',
+          color: '#cbd5e1',
+          cursor: 'pointer',
+          fontSize: '0.72rem',
+          fontWeight: 600,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '5px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+          transition: 'all 0.2s ease'
+        }}
+        onClick={() => setMinimized(false)}
+        title="View AWS Application Load Balancer Gateway Ribbon"
       >
-        <Globe size={13} style={{ color: '#38bdf8' }} />
-        <span>AWS ALB: <strong>{location.pathname}</strong></span>
-        <ChevronDown size={14} />
-      </div>
+        <span style={{ fontSize: '0.7rem', color: '#fbbf24' }}>☁</span>
+        <span style={{ color: '#94a3b8' }}>AWS ALB</span>
+        <span style={{ fontSize: '0.65rem', color: '#38bdf8' }}>▼</span>
+      </button>
     );
   }
 

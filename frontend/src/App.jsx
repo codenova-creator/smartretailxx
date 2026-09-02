@@ -22,6 +22,8 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
+import SystemStatus from './pages/SystemStatus';
+import ApiDocs from './pages/ApiDocs';
 
 function NotFoundPage() {
   return (
@@ -63,6 +65,8 @@ export function App() {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/orders/confirmation/:id" element={<OrderConfirmation />} />
+                <Route path="/status" element={<SystemStatus />} />
+                <Route path="/docs" element={<ApiDocs />} />
                 
                 {/* Protected Routes */}
                 <Route 

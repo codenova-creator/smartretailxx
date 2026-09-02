@@ -17,14 +17,12 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import VivaGuideModal from './VivaGuideModal';
 
 export const Navbar = () => {
   const { user, isAuthenticated, isAdmin, login, logout } = useAuth();
   const { totalItems } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [vivaModalOpen, setVivaModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -93,6 +91,16 @@ export const Navbar = () => {
               </NavLink>
             )}
 
+            <NavLink to="/status" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 6px #10b981' }}></span>
+              System Status
+            </NavLink>
+
+            <NavLink to="/docs" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+              <Cpu size={16} />
+              API Docs
+            </NavLink>
+
             {isAdmin && (
               <NavLink to="/admin" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
                 <ShieldCheck size={16} />
@@ -101,36 +109,8 @@ export const Navbar = () => {
             )}
           </nav>
 
-          {/* Actions (Viva Inspector, Cart & Auth) */}
+          {/* Actions (Cart & Auth) */}
           <div className="nav-actions">
-            {/* Viva & Architecture Inspector Button */}
-            <button
-              onClick={() => setVivaModalOpen(true)}
-              className="btn btn-secondary btn-sm"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                border: '1px solid rgba(99, 102, 241, 0.4)',
-                background: 'rgba(99, 102, 241, 0.12)',
-                color: '#a5b4fc',
-                fontSize: '0.82rem',
-                fontWeight: 600,
-                padding: '0.4rem 0.75rem'
-              }}
-              title="Open SmartRetailX Architecture & Viva Inspector"
-            >
-              <Zap size={14} style={{ color: '#38bdf8' }} />
-              <span>Viva Inspector</span>
-              <span style={{
-                width: '6px',
-                height: '6px',
-                borderRadius: '50%',
-                background: '#10b981',
-                boxShadow: '0 0 8px #10b981'
-              }}></span>
-            </button>
-
             {/* Shopping Cart Button */}
             <Link to="/cart" className="btn btn-secondary btn-icon cart-btn-wrapper" title="Shopping Cart">
               <ShoppingCart size={19} />
@@ -336,12 +316,6 @@ export const Navbar = () => {
           </div>
         )}
       </header>
-
-      {/* Global Viva Inspector Modal */}
-      <VivaGuideModal 
-        isOpen={vivaModalOpen} 
-        onClose={() => setVivaModalOpen(false)} 
-      />
     </>
   );
 };

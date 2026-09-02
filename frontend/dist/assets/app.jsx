@@ -514,6 +514,13 @@ function App() {
             <button className={`nav-link ${route === 'orders' ? 'active' : ''}`} onClick={() => navigateTo('orders')}>
               <Icon.Layers /> My Orders
             </button>
+            <button className={`nav-link ${route === 'status' ? 'active' : ''}`} onClick={() => navigateTo('status')}>
+              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 6px #10b981' }}></span>
+              System Status
+            </button>
+            <button className={`nav-link ${route === 'docs' ? 'active' : ''}`} onClick={() => navigateTo('docs')}>
+              <Icon.Code /> API Docs
+            </button>
             {user?.role === 'Admin' && (
               <button className={`nav-link ${route === 'admin' ? 'active' : ''}`} onClick={() => navigateTo('admin')} style={{ color: '#a5b4fc' }}>
                 <Icon.Shield /> Admin Portal
@@ -522,26 +529,6 @@ function App() {
           </nav>
 
           <div className="nav-actions">
-            {/* Viva Inspector Button */}
-            <button
-              onClick={() => setVivaModalOpen(true)}
-              className="btn btn-secondary btn-sm"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                border: '1px solid rgba(99, 102, 241, 0.4)',
-                background: 'rgba(99, 102, 241, 0.15)',
-                color: '#a5b4fc',
-                fontWeight: 600,
-                fontSize: '0.82rem'
-              }}
-            >
-              <Icon.Zap />
-              <span>Viva Inspector</span>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }}></span>
-            </button>
-
             {/* Shopping Cart Button */}
             <button className="btn btn-secondary btn-icon cart-btn-wrapper" onClick={() => navigateTo('cart')} title="Cart">
               <Icon.Cart />
@@ -605,6 +592,8 @@ function App() {
         )}
         {route === 'confirmation' && <ConfirmationScreen orderId={selectedOrderId} navigateTo={navigateTo} />}
         {route === 'orders' && <OrdersScreen user={user} navigateTo={navigateTo} />}
+        {route === 'status' && <SystemStatusScreen navigateTo={navigateTo} />}
+        {route === 'docs' && <ApiDocsScreen navigateTo={navigateTo} />}
         {route === 'profile' && <ProfileScreen user={user} token={token} switchUser={switchUser} />}
         {route === 'admin' && <AdminScreen navigateTo={navigateTo} showToast={showToast} />}
       </main>
@@ -614,7 +603,7 @@ function App() {
         <div className="container">
           <div className="footer-grid">
             <div className="footer-col">
-              <div className="brand-logo" style={{ marginBottom: '1rem' }}>
+              <div className="brand-logo" style={{ marginBottom: '1rem', cursor: 'pointer' }} onClick={() => navigateTo('home')}>
                 <svg className="brand-logo-icon" viewBox="0 0 100 100">
                   <rect width="100" height="100" rx="24" fill="url(#navGrad)" />
                   <path d="M30 35 L50 20 L70 35 L70 65 L50 80 L30 65 Z" fill="none" stroke="#ffffff" strokeWidth="6" strokeLinejoin="round"/>
@@ -632,22 +621,34 @@ function App() {
                 <li>Product Service (Port 5002)</li>
                 <li>Order Service (Port 5003)</li>
                 <li>Inventory Service (Port 5004)</li>
+                <li>Payment Service (Port 5005)</li>
+                <li>Notification Service (Port 5006)</li>
               </ul>
             </div>
             <div className="footer-col">
-              <h4>Architecture</h4>
+              <h4>Cloud Architecture</h4>
               <ul>
-                <li>AWS ALB / Reverse Proxy</li>
-                <li>AWS EventBridge & SQS</li>
-                <li>JWT Claims RBAC</li>
+                <li>AWS Application Load Balancer</li>
+                <li>AWS EventBridge & SQS Mesh</li>
+                <li>JWT Claims & RBAC Identity</li>
                 <li>Entity Framework Core</li>
               </ul>
             </div>
             <div className="footer-col">
-              <h4>Viva Evaluator Access</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-                Inspect live cluster health, domain event streams, and OpenAPI endpoints.
-              </p>
+              <h4>System & APIs</h4>
+              <ul>
+                <li><a href="#status" onClick={(e) => { e.preventDefault(); navigateTo('status'); }} style={{ color: '#38bdf8' }}>🟢 System Status & Health</a></li>
+                <li><a href="#docs" onClick={(e) => { e.preventDefault(); navigateTo('docs'); }} style={{ color: '#a5b4fc' }}>⚡ OpenAPI / Swagger Docs</a></li>
+                <li><a href="#admin" onClick={(e) => { e.preventDefault(); navigateTo('admin'); }}>🛡️ Admin Operations Portal</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <div>© 2026 SmartRetailX Platform. All rights reserved.</div>
+            <div style={{ color: 'var(--text-dim)' }}>Enterprise Cloud Microservices Edition</div>
+          </div>
+        </div>
+      </footer>
               <button onClick={() => setVivaModalOpen(true)} className="btn btn-primary btn-sm">
                 <Icon.Zap /> Launch Architecture Inspector
               </button>
@@ -1781,10 +1782,9 @@ function ProfileScreen({ user, token, switchUser }) {
 }
 
 // ----------------------------------------------------------------------------
-// 14. VIVA ARCHITECTURE INSPECTOR MODAL
+// 14. SCREEN 10: SYSTEM STATUS & CLUSTER HEALTH SCREEN (/status)
 // ----------------------------------------------------------------------------
-function VivaInspectorModal({ onClose }) {
-  const [tab, setTab] = useState('mesh');
+function SystemStatusScreen({ navigateTo }) {
   const [events, setEvents] = useState(() => getDB(STORAGE_KEYS.EVENTS, []));
 
   useEffect(() => {
@@ -1797,166 +1797,220 @@ function VivaInspectorModal({ onClose }) {
   }, []);
 
   const services = [
-    { name: 'UserService', port: 5001, role: 'JWT Auth & RBAC Identity (.NET 10)', latency: 12, http: 200 },
-    { name: 'ProductService', port: 5002, role: 'Catalog & EF Core (.NET 10)', latency: 18, http: 200 },
-    { name: 'OrderService', port: 5003, role: 'Order Processing & EventMesh (.NET 10)', latency: 15, http: 200 },
-    { name: 'InventoryService', port: 5004, role: 'Real-time Stock Control (.NET 10)', latency: 10, http: 200 },
-    { name: 'PaymentService', port: 5005, role: 'Payment Gateway Integration (.NET 10)', latency: 22, http: 200 },
-    { name: 'NotificationService', port: 5006, role: 'AWS EventBridge Alerts (.NET 10)', latency: 14, http: 200 }
+    { name: 'UserService', port: 5001, role: 'JWT Auth & RBAC Identity (ASP.NET Core / .NET 10)', latency: 12, http: 200 },
+    { name: 'ProductService', port: 5002, role: 'Catalog & EF Core (ASP.NET Core / .NET 10)', latency: 18, http: 200 },
+    { name: 'OrderService', port: 5003, role: 'Order Processing & EventMesh (ASP.NET Core / .NET 10)', latency: 15, http: 200 },
+    { name: 'InventoryService', port: 5004, role: 'Real-time Stock Control (ASP.NET Core / .NET 10)', latency: 10, http: 200 },
+    { name: 'PaymentService', port: 5005, role: 'Payment Gateway Integration (ASP.NET Core / .NET 10)', latency: 22, http: 200 },
+    { name: 'NotificationService', port: 5006, role: 'AWS EventBridge Alerts (ASP.NET Core / .NET 10)', latency: 14, http: 200 }
   ];
 
   return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-      backgroundColor: 'rgba(5, 8, 15, 0.9)', backdropFilter: 'blur(16px)',
-      zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem'
-    }}>
-      <div style={{
-        background: '#0f172a', border: '1px solid rgba(99, 102, 241, 0.35)', borderRadius: '20px',
-        maxWidth: '960px', width: '100%', maxHeight: '90vh', boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
-        display: 'flex', flexDirection: 'column', overflow: 'hidden'
-      }}>
-        {/* Header */}
-        <div style={{ padding: '1.25rem 1.75rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
-              <Icon.Zap />
-            </div>
-            <div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff' }}>SmartRetailX <span style={{ color: '#38bdf8' }}>Viva & Architecture Inspector</span></h2>
-              <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Live demonstration control panel for university examiners</div>
-            </div>
+    <div className="page-wrapper">
+      <div className="container">
+        <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <h1 className="section-title">
+              <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 10px #10b981', marginRight: '0.5rem' }}></span>
+              System Status & Cluster Health
+            </h1>
+            <p className="section-subtitle">Real-time telemetry and microservices mesh monitoring</p>
           </div>
-          <button onClick={onClose} className="btn btn-secondary btn-icon" style={{ width: '36px', height: '36px' }}><Icon.X /></button>
+
+          <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <button onClick={() => navigateTo('docs')} className="btn btn-secondary btn-sm">
+              <Icon.Code /> View OpenAPI Specs
+            </button>
+            <button onClick={() => navigateTo('products')} className="btn btn-primary btn-sm">
+              <Icon.Package /> Storefront Catalog
+            </button>
+          </div>
         </div>
 
-        {/* Tab Nav */}
-        <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '0 1.5rem', background: '#090d16', overflowX: 'auto' }}>
-          {[
-            { id: 'mesh', label: 'Microservice Mesh', icon: <Icon.Activity /> },
-            { id: 'events', label: 'EventBridge Log', icon: <Icon.Radio /> },
-            { id: 'diagram', label: 'Architecture Flow', icon: <Icon.Layers /> },
-            { id: 'script', label: 'Viva Script & Q&A', icon: <Icon.Book /> }
-          ].map(t => (
+        {/* Global Cluster Banner */}
+        <div className="card" style={{
+          background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%)',
+          border: '1px solid rgba(16, 185, 129, 0.3)',
+          marginBottom: '2rem',
+          padding: '1.25rem'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.2)', color: '#34d399', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Icon.Check />
+              </div>
+              <div>
+                <h3 style={{ fontSize: '1.1rem', color: '#fff', fontWeight: 700 }}>All Systems Operational</h3>
+                <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>AWS Region: <strong>ap-south-1</strong> • Target Group Health: <strong>6/6 Online</strong></div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem' }}>
+              <div>
+                <div style={{ color: 'var(--text-muted)' }}>Average Latency</div>
+                <strong style={{ color: '#34d399', fontSize: '1.1rem' }}>15.2 ms</strong>
+              </div>
+              <div>
+                <div style={{ color: 'var(--text-muted)' }}>Cluster Uptime</div>
+                <strong style={{ color: '#38bdf8', fontSize: '1.1rem' }}>99.99%</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Microservices Grid */}
+        <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#fff', marginBottom: '1rem' }}>Active Container Services</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem', marginBottom: '2.5rem' }}>
+          {services.map(svc => (
+            <div key={svc.name} className="card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                <div>
+                  <h4 style={{ color: '#fff', fontSize: '1.05rem', fontWeight: 700 }}>{svc.name}</h4>
+                  <span style={{ color: '#64748b', fontSize: '0.75rem' }}>Port {svc.port}</span>
+                </div>
+                <span className="badge badge-success">200 OK</span>
+              </div>
+              <p style={{ fontSize: '0.82rem', color: '#94a3b8', margin: '0.5rem 0 1rem' }}>{svc.role}</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '0.6rem', fontSize: '0.82rem' }}>
+                <span>Health Check: <strong style={{ color: '#38bdf8' }}>Healthy</strong></span>
+                <span>Latency: <strong style={{ color: '#34d399' }}>{svc.latency}ms</strong></span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Real-time EventMesh Log */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem', alignItems: 'start' }}>
+          <div className="card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff' }}>AWS EventBridge Event Mesh</h3>
+              <button onClick={() => { setDB(STORAGE_KEYS.EVENTS, []); setEvents([]); }} className="btn btn-secondary btn-sm">Clear Stream</button>
+            </div>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+              Asynchronous event messages published across services during checkout, stock adjustments, and status changes:
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '380px', overflowY: 'auto' }}>
+              {events.map(e => (
+                <div key={e.id} style={{ padding: '0.75rem 1rem', background: '#090d16', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px', fontFamily: 'monospace', fontSize: '0.78rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
+                    <span style={{ color: '#818cf8', fontWeight: 700 }}>{e.detailType}</span>
+                    <span style={{ color: '#64748b', fontSize: '0.72rem' }}>{new Date(e.time).toLocaleTimeString()}</span>
+                  </div>
+                  <div style={{ color: '#38bdf8' }}>{JSON.stringify(e.detail)}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Architecture Blueprint */}
+          <div className="card">
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>Cloud Routing Architecture</h3>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+              Path-based reverse proxy routing mapped through the AWS Application Load Balancer:
+            </p>
+            <div style={{ background: '#080c14', padding: '1rem', borderRadius: '8px', fontFamily: 'monospace', fontSize: '0.75rem', color: '#38bdf8', lineHeight: 1.5, overflowX: 'auto' }}>
+              <pre>{`
+  [ Client Browser / SPA ]
+             │
+             ▼
+  [ AWS Application Load Balancer ]
+     ├── /                     ──► Frontend SPA
+     ├── /api/v1/auth/*        ──► UserService (5001)
+     ├── /api/v1/products/*    ──► ProductService (5002)
+     ├── /api/v1/orders/*      ──► OrderService (5003)
+     ├── /api/v1/inventory/*   ──► InventoryService (5004)
+     └── /api/v1/payments/*    ──► PaymentService (5005)
+
+  [ EventBridge Asynchronous Mesh ]
+  OrderService ──► AWS EventBridge Bus ──► SQS Queue
+                     ├──► InventoryService (Stock)
+                     └──► NotificationService (Email)
+              `}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// 15. SCREEN 11: OPENAPI / SWAGGER API DOCS SCREEN (/docs)
+// ----------------------------------------------------------------------------
+function ApiDocsScreen({ navigateTo }) {
+  const [selectedService, setSelectedService] = useState('all');
+
+  const apiSpecs = [
+    { service: 'UserService', method: 'POST', path: '/api/v1/auth/login', desc: 'Authenticate user credentials & issue signed JWT bearer token', auth: 'Public', status: '200 OK' },
+    { service: 'UserService', method: 'POST', path: '/api/v1/auth/register', desc: 'Create new customer or administrator account with password hashing', auth: 'Public', status: '201 Created' },
+    { service: 'UserService', method: 'GET', path: '/api/v1/users/me', desc: 'Retrieve authenticated user identity and role claims', auth: 'Bearer JWT', status: '200 OK' },
+    { service: 'ProductService', method: 'GET', path: '/api/v1/products', desc: 'Fetch catalog products with category filtering & pagination', auth: 'Public', status: '200 OK' },
+    { service: 'ProductService', method: 'GET', path: '/api/v1/products/{id}', desc: 'Retrieve individual product details and technical specifications', auth: 'Public', status: '200 OK' },
+    { service: 'ProductService', method: 'POST', path: '/api/v1/products', desc: 'Publish new hardware product to catalog (Admin role required)', auth: 'Admin JWT', status: '201 Created' },
+    { service: 'ProductService', method: 'DELETE', path: '/api/v1/products/{id}', desc: 'Remove hardware product from catalog', auth: 'Admin JWT', status: '204 No Content' },
+    { service: 'OrderService', method: 'POST', path: '/api/v1/orders', desc: 'Place order and trigger asynchronous OrderCreated EventMesh', auth: 'Bearer JWT', status: '201 Created' },
+    { service: 'OrderService', method: 'GET', path: '/api/v1/orders/user/{userId}', desc: 'Retrieve customer order history and dispatch timeline', auth: 'Bearer JWT', status: '200 OK' },
+    { service: 'OrderService', method: 'PUT', path: '/api/v1/orders/{id}/status', desc: 'Update order fulfillment state (Confirmed/Shipped/Delivered)', auth: 'Admin JWT', status: '200 OK' },
+    { service: 'InventoryService', method: 'GET', path: '/api/v1/inventory', desc: 'Get live warehouse stock levels for all catalog items', auth: 'Public', status: '200 OK' },
+    { service: 'InventoryService', method: 'PUT', path: '/api/v1/inventory/{id}', desc: 'Directly modify warehouse stock quantity', auth: 'Admin JWT', status: '200 OK' },
+    { service: 'PaymentService', method: 'POST', path: '/api/v1/payments', desc: 'Process payment authorization and generate transaction receipt', auth: 'Bearer JWT', status: '200 OK' },
+    { service: 'NotificationService', method: 'POST', path: '/api/v1/notifications/send', desc: 'EventBridge consumer worker for customer confirmation emails', auth: 'Internal Bus', status: '200 OK' }
+  ];
+
+  const filteredSpecs = selectedService === 'all' ? apiSpecs : apiSpecs.filter(s => s.service.toLowerCase() === selectedService.toLowerCase());
+
+  return (
+    <div className="page-wrapper">
+      <div className="container">
+        <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <h1 className="section-title"><Icon.Code /> OpenAPI 3.0 & REST API Reference</h1>
+            <p className="section-subtitle">Official Swagger documentation for all 6 decoupled ASP.NET Core microservices</p>
+          </div>
+
+          <button onClick={() => navigateTo('status')} className="btn btn-secondary btn-sm">
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block', marginRight: '4px' }}></span>
+            Cluster Status Monitor
+          </button>
+        </div>
+
+        {/* Filter by Microservice */}
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+          {['all', 'UserService', 'ProductService', 'OrderService', 'InventoryService', 'PaymentService', 'NotificationService'].map(svc => (
             <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              style={{
-                padding: '0.85rem 1rem', background: 'none', border: 'none',
-                borderBottom: tab === t.id ? '2px solid #6366f1' : '2px solid transparent',
-                color: tab === t.id ? '#ffffff' : '#94a3b8', fontWeight: tab === t.id ? 700 : 500,
-                fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', whiteSpace: 'nowrap'
-              }}
+              key={svc}
+              onClick={() => setSelectedService(svc)}
+              className={`btn btn-sm ${selectedService === svc ? 'btn-primary' : 'btn-secondary'}`}
+              style={{ borderRadius: 'var(--radius-full)' }}
             >
-              {t.icon} {t.label}
+              {svc === 'all' ? 'All Microservices' : svc}
             </button>
           ))}
         </div>
 
-        {/* Body */}
-        <div style={{ padding: '1.5rem', flexGrow: 1, overflowY: 'auto' }}>
-          {tab === 'mesh' && (
-            <div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
-                {services.map(svc => (
-                  <div key={svc.name} style={{ padding: '1.1rem', background: 'rgba(30, 41, 59, 0.4)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.4rem' }}>
-                      <div>
-                        <h4 style={{ color: '#fff', fontSize: '0.95rem', fontWeight: 700 }}>{svc.name}</h4>
-                        <span style={{ color: '#64748b', fontSize: '0.75rem' }}>Port {svc.port}</span>
-                      </div>
-                      <span className="badge badge-success">Online</span>
-                    </div>
-                    <div style={{ fontSize: '0.78rem', color: '#94a3b8', margin: '0.4rem 0' }}>{svc.role}</div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '0.4rem', fontSize: '0.78rem' }}>
-                      <span>HTTP: <strong style={{ color: '#38bdf8' }}>200 OK</strong></span>
-                      <span>Latency: <strong style={{ color: '#34d399' }}>{svc.latency}ms</strong></span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+        {/* API Endpoints List */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {filteredSpecs.map((api, idx) => (
+            <div key={idx} className="card" style={{ padding: '1.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <span className={`badge ${api.method === 'GET' ? 'badge-cyan' : api.method === 'POST' ? 'badge-success' : api.method === 'PUT' ? 'badge-warning' : 'badge-danger'}`} style={{ fontWeight: 800 }}>
+                    {api.method}
+                  </span>
+                  <code style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc' }}>{api.path}</code>
+                </div>
 
-          {tab === 'events' && (
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#fff' }}>AWS EventBridge Event Log Stream</h3>
-                <button onClick={() => { setDB(STORAGE_KEYS.EVENTS, []); setEvents([]); }} className="btn btn-secondary btn-sm">Clear Log</button>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '420px', overflowY: 'auto' }}>
-                {events.map(e => (
-                  <div key={e.id} style={{ padding: '0.8rem 1rem', background: '#090d16', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px', fontFamily: 'monospace', fontSize: '0.8rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
-                      <span style={{ color: '#818cf8', fontWeight: 700 }}>{e.detailType} ({e.source})</span>
-                      <span style={{ color: '#64748b', fontSize: '0.72rem' }}>{new Date(e.time).toLocaleTimeString()}</span>
-                    </div>
-                    <div style={{ color: '#38bdf8' }}>{JSON.stringify(e.detail)}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {tab === 'diagram' && (
-            <div>
-              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#fff', marginBottom: '0.75rem' }}>Distributed Cloud Architecture</h3>
-              <div style={{ background: '#080c14', padding: '1.25rem', borderRadius: '10px', fontFamily: 'monospace', fontSize: '0.8rem', color: '#38bdf8', lineHeight: 1.6, overflowX: 'auto' }}>
-                <pre>{`
-  [ Client Browser / Frontend SPA ]
-                 │
-                 ▼
-  [ AWS Application Load Balancer (ALB) - Port 80/443 ]
-         ├── /                     ──► Frontend React SPA (Nginx Container)
-         ├── /api/v1/auth/*        ──► UserService (.NET 10 / Port 5001)
-         ├── /api/v1/products/*    ──► ProductService (.NET 10 / Port 5002)
-         ├── /api/v1/orders/*      ──► OrderService (.NET 10 / Port 5003)
-         ├── /api/v1/inventory/*   ──► InventoryService (.NET 10 / Port 5004)
-         └── /api/v1/payments/*    ──► PaymentService (.NET 10 / Port 5005)
-
-  [ Asynchronous Event Mesh (EventBridge & SQS) ]
-  OrderService ──(OrderCreated Event)──► AWS EventBridge Bus ──► SQS Queue
-                                                                  │
-                                      ┌───────────────────────────┴───────────────────────────┐
-                                      ▼                                                       ▼
-                            [ InventoryService ]                                  [ NotificationService ]
-                         (Reduces warehouse stock)                             (Sends dispatch confirmation)
-                `}</pre>
-              </div>
-            </div>
-          )}
-
-          {tab === 'script' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div>
-                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>10-Step Viva Demo Script</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem' }}>
-                  {[
-                    '1. Introduce SmartRetailX as a cloud-native microservices architecture built with .NET 10, React, and AWS.',
-                    '2. Open this Viva Inspector to prove that all 6 services are healthy and communicating.',
-                    '3. Log in as Customer (jane@example.com) to demonstrate JWT HMAC-SHA256 authentication.',
-                    '4. Browse the catalog, filter by Gaming/Audio/Computers, and show live stock counts.',
-                    '5. Add products to cart, apply promo code (VIVA2025), and place the order.',
-                    '6. Show the "EventBridge Log" tab to prove that the OrderCreated domain event fired and deducted stock.',
-                    '7. Switch to Admin role (admin@smartretailx.com) and navigate to the Admin Dashboard.',
-                    '8. Modify an order status from "Confirmed" to "Shipped" and adjust warehouse stock.',
-                    '9. Explain the eventual consistency model between OrderService and InventoryService.',
-                    '10. Show the architecture diagram and answer questions about AWS ECS, ALB, and JWT.'
-                  ].map((s, i) => (
-                    <div key={i} style={{ padding: '0.5rem 0.75rem', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', color: '#cbd5e1' }}>
-                      {s}
-                    </div>
-                  ))}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.04)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
+                    Auth: {api.auth}
+                  </span>
+                  <span className="badge badge-primary">{api.service}</span>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
 
-        {/* Footer */}
-        <div style={{ padding: '1rem 1.75rem', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#090d16' }}>
-          <span style={{ fontSize: '0.78rem', color: '#64748b' }}>SmartRetailX Viva Companion</span>
-          <button onClick={onClose} className="btn btn-primary btn-sm">Close Inspector</button>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{api.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
 {
-  "name": "smartretailx",
+  "name": "smartretailx-platform",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "echo 'Static distribution ready in frontend/dist'"
+    "build": "cd frontend && npm install && npm run build",
+    "dev": "cd frontend && npm run dev"
   }
 }
